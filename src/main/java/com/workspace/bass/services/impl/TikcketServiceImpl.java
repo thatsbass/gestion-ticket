@@ -35,13 +35,13 @@ public class TikcketServiceImpl implements TicketService {
         
         Long utilisateurId = dto.getUtilisateur_id();
         if (utilisateurId == null) {
-            throw new IllegalArgumentException("L'ID de l'utilisateur est requis");
+            throw new ResourceException("L'ID de l'utilisateur est requis");
         }
         Utilisateur createur = utilisateurRepository.findById(utilisateurId)
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID: " + utilisateurId));
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé avec l'ID: " + utilisateurId));
         
         if (createur.getRole().name().equals("TECHNICIEN")) {
-            throw new IllegalStateException("Un technicien ne peut pas créer de ticket");
+            throw new ResourceException("Un technicien ne peut pas créer de ticket");
         }
         
         Ticket ticket = ticketMapper.toEntity(dto);
@@ -55,10 +55,10 @@ public class TikcketServiceImpl implements TicketService {
     @Transactional
     public TicketResponse assignerTechnicien(Long ticketId, Long technicienId) {
         Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket non trouvé avec l'ID: " + ticketId));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket non trouvé avec l'ID: " + ticketId));
                 
         Utilisateur technicien = utilisateurRepository.findById(technicienId)
-                .orElseThrow(() -> new EntityNotFoundException("Technicien non trouvé avec l'ID: " + technicienId));
+                .orElseThrow(() -> new ResourceNotFoundException("Technicien non trouvé avec l'ID: " + technicienId));
         
         ticket.setStatut(TicketStatus.EN_COURS);
         ticket.setTechnicien(technicien);

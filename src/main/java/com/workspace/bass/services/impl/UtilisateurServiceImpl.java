@@ -4,6 +4,7 @@ import com.workspace.bass.dto.request.UtlisateurRequest;
 import com.workspace.bass.dto.response.UtlisateurResponse;
 import com.workspace.bass.entities.Utilisateur;
 import com.workspace.bass.enums.Role;
+import com.workspace.bass.exceptions.ResourceException;
 import com.workspace.bass.mapper.UtlisateurMapper;
 import com.workspace.bass.repository.UtilisateurRepository;
 import com.workspace.bass.services.UtilisateurService;
@@ -27,7 +28,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         validator.validate(dto);
      
         if (utilisateurRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalStateException("L'email est déjà utilisé");
+            throw new ResourceException("L'email est déjà utilisé");
         }
 
         Utilisateur utilisateur = userMapper.toEntity(dto);
